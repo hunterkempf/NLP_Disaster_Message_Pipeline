@@ -22,6 +22,12 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 nltk.download(['punkt', 'wordnet', 'averaged_perceptron_tagger'])
 
 def load_data(database_filepath):
+    """
+    Using the database filepath this function will pull data from the
+    Message table in the sqlite db that was stored from the Data Engineering
+    process earlier that cleaned and joined the data. It will return the X,Y
+    and category names of the target columns
+    """
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql_table("Message",con=engine)
     X = df.message
@@ -31,6 +37,11 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """
+    This function is a tokenizer function that is used by CountVectorizer
+    it removes URLs and replaces them with a placeholder to have a more consistent
+    text feature. It also tokenizes and Lemmatizes the words in the message.
+    """
     url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     detected_urls = re.findall(url_regex, text)
     for url in detected_urls:
@@ -47,7 +58,10 @@ def tokenize(text):
     return clean_tokens
 
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
-
+    """
+    This is a transformer that creates features related to if the first word
+    of a sentance is a verb
+    """
     def starting_verb(self, text):
         sentence_list = sent_tokenize(text)
         for sentence in sentence_list:
@@ -66,6 +80,10 @@ class StartingVerbExtractor(BaseEstimator, TransformerMixin):
 
 
 def build_model():
+    """
+    This function builds the sklearn pipeline to create text based features
+    and classify messages into each of the 36 target columns
+    """
     pipeline = Pipeline([
         ('features', FeatureUnion([
     
@@ -84,6 +102,11 @@ def build_model():
 
 
 def evaluate_model(model, X_test, y_test, category_names):
+    """
+    This function takes in a trained model and the test data (features and actuals) and uses
+    the model to predict results. It then runs those results through a classification report for
+    each of the 36 target columns.
+    """
     y_pred = model.predict(X_test)
     for colnum in range(y_pred.shape[1]):
         print("\nClassification Report for",category_names[colnum],"Column")
