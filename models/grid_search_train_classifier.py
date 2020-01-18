@@ -71,13 +71,13 @@ def build_model():
     
             ('text_pipeline', Pipeline([
                 ('vect', CountVectorizer(tokenizer=tokenize)),
-                ('tfidf', TfidfTransformer(use_idf = True))
+                ('tfidf', TfidfTransformer())
             ])),
     
             ('starting_verb', StartingVerbExtractor())
-        ],transformer_weights = {'text_pipeline': 1, 'starting_verb': 0.5})),
+        ])),
     
-        ('clf', MultiOutputClassifier(RandomForestClassifier(min_samples_split = 4, n_estimators = 26)))
+        ('clf', MultiOutputClassifier(RandomForestClassifier(n_estimators = 25)))
     
     ])
     return pipeline
@@ -95,8 +95,8 @@ def save_model(model, model_filepath):
 
 
 def main():
-    if len(sys.argv) == 3:
-        database_filepath, model_filepath = sys.argv[1:]
+    if len(sys.argv) == 2:
+        database_filepath = sys.argv[1]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
@@ -104,16 +104,19 @@ def main():
         print('Building model...')
         model = build_model()
         
-        print('Training model...')
-        model.fit(X_train, Y_train)
-        
-        print('Saving model...\n    MODEL: {}'.format(model_filepath))
-        save_model(model, model_filepath)
-        
-        print('Evaluating model...')
-        evaluate_model(model, X_test, Y_test, category_names)
-
-        
+        print('Searching Hyper Parameters for Pipeline...')
+        parameters = {'features__text_pipeline__tfidf__use_idf': (True, False),
+              'clf__estimator__n_estimators': [25,26],
+              'clf__estimator__min_samples_split': [3, 4],
+              'features__transformer_weights': (
+                  {'text_pipeline': 1, 'starting_verb': 0.5},
+                  {'text_pipeline': 1, 'starting_verb': 1}
+              )
+             }
+        cv = GridSearchCV(model,parameters,verbose=2)
+        cv.fit(X_train, Y_train)
+        print("Best Parameters Found...")
+        print(cv.best_params_)
 
         print('Trained model saved!')
 
