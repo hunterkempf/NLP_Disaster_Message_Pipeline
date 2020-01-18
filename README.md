@@ -94,7 +94,28 @@ My Model uses a simple Random Forest Classifier and extends it to handle the 36 
 
 ### Hyperparameter Tuning:
 
-I did a grid search over a set of hyper parameters to tune my model using scikit-learn's GridSearchCV function over the entire pipeline. 
+I did a grid search over a set of hyper parameters to tune my model using scikit-learn's GridSearchCV function over the entire pipeline using the following parameters: 
+
+```
+parameters = {'features__text_pipeline__tfidf__use_idf': (True, False),
+              'clf__estimator__n_estimators': [25,26],
+              'clf__estimator__min_samples_split': [3, 4],
+              'features__transformer_weights': (
+                  {'text_pipeline': 1, 'starting_verb': 0.5},
+                  {'text_pipeline': 1, 'starting_verb': 1}
+              )
+             }
+```
+
+Grid search parameter tuning can take a long time especially with a random forrest classifier that can have an infinate number of estimators. I chose the number of estimators to be around 25 for speed but for the most accurate model generally more estimators would provide better results.
+
+The best parameters found by the gridsearch for my pipeline were:
+```
+{'clf__estimator__min_samples_split': 4, 
+ 'clf__estimator__n_estimators': 26, 
+ 'features__text_pipeline__tfidf__use_idf': True, 
+ 'features__transformer_weights': {'text_pipeline': 1, 'starting_verb': 0.5}}
+```
 
 ### Instructions to Run on your Computer:
 1. Run the following commands in the project's root directory to set up your database and model.
