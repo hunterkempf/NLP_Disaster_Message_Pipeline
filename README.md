@@ -111,7 +111,10 @@ Grid search parameter tuning can take a long time especially with a random forre
 
 The best parameters found by the gridsearch for my pipeline were:
 ```
-{'clf__estimator__min_samples_split': 4, 'clf__estimator__n_estimators': 26, 'features__text_pipeline__tfidf__use_idf': True, 'features__transformer_weights': {'text_pipeline': 1, 'starting_verb': 0.5}}
+{'clf__estimator__min_samples_split': 4, 
+ 'clf__estimator__n_estimators': 26, 
+ 'features__text_pipeline__tfidf__use_idf': True, 
+ 'features__transformer_weights': {'text_pipeline': 1, 'starting_verb': 0.5}}
 ```
 
 ### Instructions to Run on your Computer:
