@@ -24,7 +24,7 @@ My project will include a web app where an emergency worker can input a new mess
 
 - models
 |- train_classifier.py
-|- classifier.pkl  # saved model 
+|- classifier.pkl  # saved model (not included in the git repo because of size constraints)
 ```
 
 ### Extract Transform Load (ETL): 
