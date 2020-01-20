@@ -58,20 +58,16 @@ model = joblib.load("../models/classifier.pkl")
 @app.route('/index')
 def index():
     
-    # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
+    # Count of Messages by Genre
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
 
-    # English vs Other graphic
+    # Determine Message Length in Words
     df['message_len'] = df['message'].str.split().str.len()
     language_genre_counts = df['message_len']
-    print(language_genre_counts)
     language_genre_sums = df.groupby('genre').mean()['message_len']
-    genre_names = list(genre_counts.index)
     
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
     graphs = [
         {
             'data': [
