@@ -67,7 +67,7 @@ def index():
     df['message_len'] = df['message'].str.split().str.len()
     language_genre_counts = df['message_len']
     print(language_genre_counts)
-    language_genre_sums = df.groupby('genre').sum()['message_len']
+    language_genre_sums = df.groupby('genre').mean()['message_len']
     genre_names = list(genre_counts.index)
     
     # create visuals
@@ -99,12 +99,15 @@ def index():
             ],
 
             'layout': {
-                'title': 'Distribution of Langugage counts in Message Genres',
+                'title': 'Message Lengths',
                 'yaxis': {
                     'title': "Count"
                 },
                 'xaxis': {
-                    'title': "Genre"
+                    'title': "Length (Words)",
+                    'range': [0,200],
+                    'tick0' : 0,
+                    'dtick' : 25
                 }
             }
         },
@@ -117,9 +120,9 @@ def index():
             ],
 
             'layout': {
-                'title': 'Distribution of Language in Message Genres',
+                'title': 'Average Message Length by Genre',
                 'yaxis': {
-                    'title': "Sum"
+                    'title': "Avg Length (Words)"
                 },
                 'xaxis': {
                     'title': "Genre"
