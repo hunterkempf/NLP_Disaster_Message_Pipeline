@@ -100,7 +100,7 @@ def index():
                     'title': "Count"
                 },
                 'xaxis': {
-                    'title': "Length (Words)",
+                    'title': "Length (# of Words)",
                     'range': [0,200],
                     'tick0' : 0,
                     'dtick' : 25
@@ -118,7 +118,7 @@ def index():
             'layout': {
                 'title': 'Average Message Length by Genre',
                 'yaxis': {
-                    'title': "Avg Length (Words)"
+                    'title': "Avg Length (# of Words)"
                 },
                 'xaxis': {
                     'title': "Genre"
